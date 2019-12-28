@@ -1,4 +1,3 @@
-import LED
 import time
 class SM:
     def start(self):
