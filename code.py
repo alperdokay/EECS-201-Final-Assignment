@@ -22,7 +22,7 @@ class ParkAssistant(SM):
     state = ""
     def __init__(self):
         # defining each item that belongs to our class
-        self.second_counter = 0  # local variable as counter
+        self.timer = 0  # local variable as counter
         self.greenLED = digitalio.DigitalInOut(board.D10)  # Green LED
         self.redLED = digitalio.DigitalInOut(board.D11)  # Red LED
         self.yellowLED = digitalio.DigitalInOut(board.D12)  # Yellow LED
@@ -67,8 +67,8 @@ class ParkAssistant(SM):
         elif inp <= 25:
             self.redLED.value = True
             self.buzzer.duty_cycle = self.ON
-            self.second_counter += 1
-            if self.second_counter >= 5:
+            self.timer += 1
+            if self.timer >= 5:
                 self.shutdown()
             return "Warning!", inp
     
@@ -87,7 +87,7 @@ class ParkAssistant(SM):
 #             return
 
 #         if self.state != "Warning!":
-#             self.second_counter = 0
+#             self.timer = 0
             
 #         self.buzzer.duty_cycle = self.ON
 #         frequency = 440-self.inp*4
@@ -95,7 +95,7 @@ class ParkAssistant(SM):
 #         self.buzzer.frequency = frequency
         if self.state != "Warning!": 
             self.buzzer.duty_cycle = self.OFF
-            self.second_counter = 0
+            self.timer = 0
 
     # This is the function that starts the whole application
     def startParking(self):
