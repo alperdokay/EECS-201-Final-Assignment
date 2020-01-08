@@ -29,9 +29,9 @@ class ParkAssistant(SM):
         # Opening Ceremony
         for led in [self.greenLED, self.yellowLED, self.redLED]:
             led.direction = digitalio.Direction.OUTPUT
-            led.value = False
-            time.sleep(2)
             led.value = True
+            time.sleep(2)
+            led.value = False
             time.sleep(1)
         self.buzzer = pulseio.PWMOut(board.D13, variable_frequency=True)  # Buffer initiated
         # Buffer attributes - Start
@@ -52,20 +52,20 @@ class ParkAssistant(SM):
         self.turnOffLEDs()  # Turning off the LEDs
         # Conditions are made here to warn the driver
         if inp > 120 and inp < 200:
-            self.greenLED.value = False
+            self.greenLED.value = True
             return "You are Safe", inp
         elif inp > 50 and inp <= 120:
-            self.yellowLED.value = False
+            self.yellowLED.value = True
             return "Slow Down Your Speed", inp 
         elif inp > 25 and inp <= 50:
-            self.redLED.value = False
+            self.redLED.value = True
             return "DANGER TOO CLOSE", inp
         elif inp >= 200:
-            self.greenLED.value = False
-            self.yellowLED.value = False
+            self.greenLED.value = True
+            self.yellowLED.value = True
             return 'Distance Error', inp
         elif inp <= 25:
-            self.redLED.value = False
+            self.redLED.value = True
             self.buzzer.duty_cycle = self.ON
             self.second_counter += 1
             if self.second_counter >= 5:
@@ -74,9 +74,9 @@ class ParkAssistant(SM):
     
     # This function is made to turn off LEDs at a moment
     def turnOffLEDs(self):
-        self.redLED.value = True
-        self.greenLED.value = True
-        self.yellowLED.value = True
+        self.redLED.value = False
+        self.greenLED.value = False
+        self.yellowLED.value = False
 
     # This function is made to check 
     def VolumeControl(self):
@@ -93,7 +93,9 @@ class ParkAssistant(SM):
 #         frequency = 440-self.inp*4
 #         if frequency <= 0: frequency = 1
 #         self.buzzer.frequency = frequency
-        if self.state != "Warning!": self.buzzer.duty_cycle = self.OFF
+        if self.state != "Warning!": 
+            self.buzzer.duty_cycle = self.OFF
+            self.second_counter = 0
 
     # This is the function that starts the whole application
     def startParking(self):
